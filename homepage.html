@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Online Automobile Store</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            padding: 10px 20px;
+            color: white;
+        }
+        header h1 {
+            margin: 0;
+        }
+        nav ul {
+            list-style: none;
+            display: flex;
+            padding: 0;
+            margin: 0;
+        }
+        nav ul li {
+            margin-left: 20px;
+        }
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+        }
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+        .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+        .dropdown-content a:hover {
+            background-color: #f1f1f1;
+        }
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+        .main-content {
+            padding: 20px;
+        }
+        .car-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .car-item {
+            border: 1px solid #ddd;
+            padding: 10px;
+            width: calc(33.333% - 40px);
+            box-sizing: border-box;
+            border-radius: 5px;
+        }
+        .car-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+        .car-item h3 {
+            margin-top: 10px;
+            margin-bottom: 5px;
+        }
+        .car-item p {
+            margin: 0;
+        }
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #333;
+            color: white;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+            padding-top: 60px;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 10px;
+        }
+        .icon-close {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .form-box {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .form-box .input-box {
+            display: flex;
+            align-items: center;
+        }
+        .form-box .input-box span.icon {
+            margin-right: 10px;
+        }
+        .form-box .input-box input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-box .input-box label {
+            margin-left: 10px;
+        }
+        .form-box button {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #333;
+            color: white;
+            cursor: pointer;
+        }
+        .form-box button:hover {
+            background-color: #555;
+        }
+        .form-box .register a {
+            color: #333;
+            text-decoration: none;
+        }
+        .form-box .register a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        .container h2 {
+            text-align: center;
+        }
+        .container label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        .container input[type="text"],
+        .container input[type="number"],
+        .container input[type="file"],
+        .container select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .container input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 5px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .container input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+        }
+        .home img {
+            display: block;
+            max-width: 100%;
+            height: auto;
+            margin: 20px auto;
+            border-radius: 10px;
+        }
+        .home p {
+            text-align: center;
+            font-size: 1.2em;
+            margin-top: 10px;
+        }
+        .dynamic-text {
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            animation: typing 4s steps(40, end) infinite;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Online Automobile Store</h1>
+        <nav>
+            <ul>
+                <li>
+                    <a href="#" id="homeLink"><i class="fas fa-home"></i> Home</a>
+                </li>
+                <li>
+                   <!--- <a href="#" id="newCarsLink"><i class="fas fa-car"></i> New Cars</a>-->
+                    <a href="http://localhost:3000/cars" id="newCarsLink"><i class="fas fa-car"></i> New Cars</a>
+                </li>
+                
+                <li class="dropdown">
+                    <a href="#"><i class="fas fa-user"></i> Login <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="#" id="userLogin">User</a>
+                        <a href="#" id="managerLogin">Manager</a>
+                    </div>
+                </li>
+            </ul>
+        </nav>
+    </header>
+    <main id="mainContent">
+        <section class="home">
+            <h2><span class="dynamic-text">Welcome to the Online Automobile Store</span></h2>
+            <p>Welcome to your Dream Place</p>
+        </section>
+        <section class="new-cars">
+            <a href="http://localhost:3000/cars">
+              
+                
+            </a>
+        </section>
+        
+      
+    </main>
+    <footer>
+        <p>&copy; 2024 Online Automobile Store. All rights reserved.</p>
+    </footer>
+
+    <div id="userLoginModal" class="modal">
+        <div class="modal-content">
+            <span class="icon-close"><i class="fas fa-times"></i></span>
+            <div class="form-box login">
+                <h2>User Login</h2>
+                <form id="userLoginForm" action="#">
+                    <div class="input-box">
+                        <span class="icon"><i class="fas fa-envelope"></i></span>
+                        <input type="email" required>
+                        <label>Email</label>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><i class="fas fa-lock"></i></span>
+                        <input type="password" required>
+                        <label>Password</label>
+                    </div>
+                    <div class="remember-forgot">
+                        <label><input type="checkbox">Remember me</label>
+                        <a href="#">Forget password</a>
+                    </div>
+                    <button type="submit" class="button">Login</button>
+                    <div class="register">
+                        <p>Don't have an account?<a href="#" class="register-link">Register</a></p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="registerModal" class="modal">
+        <div class="modal-content">
+            <span class="icon-close"><i class="fas fa-times"></i></span>
+            <div class="form-box register">
+                <h2>Registration</h2>
+                <form id="registerForm" action="#">
+                    <div class="input-box">
+                        <span class="icon"><i class="fas fa-user"></i></span>
+                        <input type="text" required>
+                        <label>Username</label>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><i class="fas fa-envelope"></i></span>
+                        <input type="email" required>
+                        <label>Email</label>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><i class="fas fa-lock"></i></span>
+                        <input type="password" required>
+                        <label>Password</label>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><i class="fas fa-phone"></i></span>
+                        <input type="text" required>
+                        <label>Phone Number</label>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><i class="fas fa-map-marker-alt"></i></span>
+                        <input type="text" required>
+                        <label>Location</label>
+                    </div>
+                    <div class="remember-forgot">
+                        <label><input type="checkbox">I agree to terms and conditions</label>
+                    </div>
+                    <button type="submit" class="button">Register</button>
+                    <div class="register">
+                       
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="managerLoginModal" class="modal">
+        <div class="modal-content">
+            <span class="icon-close"><i class="fas fa-times"></i></span>
+            <div class="form-box login">
+                <h2>Manager Login</h2>
+                <form id="managerLoginForm" action="#">
+                    <div class="input-box">
+                        <span class="icon"><i class="fas fa-user"></i></span>
+                        <input type="text" id="managerID" required> <!-- Add id attribute -->
+                        <label>Manager ID</label>
+                    </div>
+                    <div class="input-box">
+                        <span class="icon"><i class="fas fa-lock"></i></span>
+                        <input type="password" id="managerPassword" required> <!-- Add id attribute -->
+                        <label>Password</label>
+                    </div>
+                    <button type="submit" class="button">Login</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <section id="addCarSection" class="add-car" style="display: none;">
+        <a href="addform.html">Add a Car</a>
+    </section>
+    
+    <script>
+        const homeLink = document.getElementById('homeLink');
+        const newCarsLink = document.getElementById('newCarsLink');
+        
+         const userLogin = document.getElementById('userLogin');
+        const managerLogin = document.getElementById('managerLogin');
+        const registerLink = document.querySelector('.register-link'); // Define registerLink
+        
+        const mainContent = document.getElementById('mainContent');
+        const homeSection = mainContent.querySelector('.home');
+        const newCarsSection = mainContent.querySelector('.new-cars');
+        
+        homeLink.addEventListener('click', () => {
+            homeSection.style.display = 'block';
+            newCarsSection.style.display = 'none';
+        });
+
+        newCarsLink.addEventListener('click', () => {
+            homeSection.style.display = 'none';
+            newCarsSection.style.display = 'block';
+            
+        });
+
+       
+
+        userLogin.addEventListener('click', () => {
+            document.getElementById('userLoginModal').style.display = 'block';
+        });
+
+        managerLogin.addEventListener('click', () => {
+            document.getElementById('managerLoginModal').style.display = 'block';
+            });
+            
+            document.getElementById('managerLoginForm').addEventListener('submit', (event) => {
+                event.preventDefault(); // Prevent form submission
+            
+                // Simulate manager login (replace this with your actual login logic)
+                const managerID = document.getElementById('managerID').value;
+                const password = document.getElementById('managerPassword').value;
+            
+                // Check if manager ID and password are correct (replace this with your actual validation logic)
+                if (managerID === 'carmgr123@gmail.com' && password === '1234') {
+                    document.getElementById('managerLoginModal').style.display = 'none'; // Hide manager login modal
+                    document.getElementById('addCarSection').style.display = 'block'; // Show add car section
+                } else {
+                    alert('Invalid manager ID or password. Please try again.'); // Show error message
+                }
+            });
+            
+                registerLink.addEventListener('click', () => {
+                    document.getElementById('registerModal').style.display = 'block';
+                    document.getElementById('userLoginModal').style.display = 'none'; // Hide login modal when showing registration modal
+                });
+        document.querySelectorAll('.icon-close').forEach(button => {
+            button.addEventListener('click', function () {
+                const modal = this.closest('.modal');
+                modal.style.display = 'none';
+            });
+        });
+
+        window.onclick = function (event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = "none";
+            }
+        }
+
+        // Initially, only the home section is visible
+        homeSection.style.display = 'block';
+        newCarsSection.style.display = 'none';
+       
+    </script>
+</body>
+</html>
