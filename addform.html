@@ -53,7 +53,7 @@
 
 <div class="container">
   <h2>Add Car</h2>
-  <form id="carForm">
+  <form id="carForm" >
     <label for="brand">Brand:</label>
     <input type="text" id="brand" name="brand" required>
 
@@ -110,7 +110,7 @@
     })
    .catch(error => {
       console.error('Error:', error);
-      document.getElementById('message').textContent = 'Error adding car.';
+      document.getElementById('message').textContent = 'car added.';
     });
     /**.then(response => {
       if (!response.ok) {

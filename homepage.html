@@ -11,6 +11,8 @@
             margin: 0;
             padding: 0;
         }
+
+
         header {
             display: flex;
             justify-content: space-between;
@@ -21,6 +23,9 @@
         }
         header h1 {
             margin: 0;
+        }
+        #mainContent {
+            flex: 1;
         }
         nav ul {
             list-style: none;
@@ -216,11 +221,20 @@
             font-size: 1.2em;
             margin-top: 10px;
         }
+        
         .dynamic-text {
             display: inline-block;
             white-space: nowrap;
             overflow: hidden;
             animation: typing 4s steps(40, end) infinite;
+        }
+        
+        .background-image{
+            width:100%;
+            height:700px;
+            background-image: url('car.jpeg');
+            background-repeat: no-repeat;
+            background-size: cover;
         }
     </style>
 </head>
@@ -249,18 +263,44 @@
     </header>
     <main id="mainContent">
         <section class="home">
-            <h2><span class="dynamic-text">Welcome to the Online Automobile Store</span></h2>
-            <p>Welcome to your Dream Place</p>
+            <div class="background-image">
+
+                </div>
+            
         </section>
         <section class="new-cars">
             <a href="http://localhost:3000/cars">
               
                 
             </a>
+            <section id="addCarSection" class="add-car" style="display: none;">
+                <!-- Add car form content -->
+                <h2>Add a Car</h2>
+                <div class="container">
+                    <form id="addCarForm">
+                        <label for="carMake">Car Make:</label>
+                        <input type="text" id="carMake" required>
+                        <label for="carModel">Car Model:</label>
+                        <input type="text" id="carModel" required>
+                        <label for="carYear">Car Year:</label>
+                        <input type="number" id="carYear" required>
+                        <label for="carPrice">Car Price:</label>
+                        <input type="number" id="carPrice" required>
+                        <button type="submit">Add Car</button>
+                    </form>
+                </div>
+            </section>
+            <section id="carListSection" class="car-list" style="display: none;">
+                <!-- Car list content -->
+                <h2>Car List</h2>
+                <div id="carList" class="car-list"></div>
+            </section>
         </section>
         
       
     </main>
+</div>
+</div>
     <footer>
         <p>&copy; 2024 Online Automobile Store. All rights reserved.</p>
     </footer>
@@ -342,14 +382,14 @@
             <span class="icon-close"><i class="fas fa-times"></i></span>
             <div class="form-box login">
                 <h2>Manager Login</h2>
-                <form id="managerLoginForm" action="#">
+                <form id="managerLoginForm" action="/addcar" method="GET">
                     <div class="input-box">
-                        <span class="icon"><i class="fas fa-user"></i></span>
+                        <span class="icon-close"><i class="fas fa-user"></i></span>
                         <input type="text" id="managerID" required> <!-- Add id attribute -->
                         <label>Manager ID</label>
                     </div>
                     <div class="input-box">
-                        <span class="icon"><i class="fas fa-lock"></i></span>
+                        <span class="icon-close"><i class="fas fa-lock"></i></span>
                         <input type="password" id="managerPassword" required> <!-- Add id attribute -->
                         <label>Password</label>
                     </div>
@@ -361,7 +401,8 @@
     <section id="addCarSection" class="add-car" style="display: none;">
         <a href="addform.html">Add a Car</a>
     </section>
-    
+
+ 
     <script>
         const homeLink = document.getElementById('homeLink');
         const newCarsLink = document.getElementById('newCarsLink');
@@ -394,8 +435,29 @@
         managerLogin.addEventListener('click', () => {
             document.getElementById('managerLoginModal').style.display = 'block';
             });
+            // Add this JavaScript section to handle user login and redirection
+
+document.getElementById('userLoginForm').addEventListener('submit', async (event) => {
+    event.preventDefault(); // Prevent form submission
+
+    // Simulate user login (replace with your actual login logic)
+    const userEmail = document.querySelector('#userLoginForm input[type="email"]').value;
+    const userPassword = document.querySelector('#userLoginForm input[type="password"]').value;
+
+    // Check if user email and password are correct (replace with your actual validation logic)
+    if (userEmail === 'user@gmail.com' && userPassword === '1234') {
+        document.getElementById('userLoginModal').style.display = 'none'; // Hide user login modal
+
+        // Redirect to new cars list page
+        window.location.href = 'http://localhost:3000/cars'; // Replace with your actual URL
+    } else {
+        alert('Invalid email or password. Please try again.'); // Show error message
+    }
+});
+
             
-            document.getElementById('managerLoginForm').addEventListener('submit', (event) => {
+                    
+document.getElementById('managerLoginForm').addEventListener('submit', (event) => {
                 event.preventDefault(); // Prevent form submission
             
                 // Simulate manager login (replace this with your actual login logic)
@@ -406,11 +468,14 @@
                 if (managerID === 'carmgr123@gmail.com' && password === '1234') {
                     document.getElementById('managerLoginModal').style.display = 'none'; // Hide manager login modal
                     document.getElementById('addCarSection').style.display = 'block'; // Show add car section
+                    loadCarList(); // 
+                    // window.location.href = 'addform.html'; // Redirect to addform.html
                 } else {
                     alert('Invalid manager ID or password. Please try again.'); // Show error message
                 }
             });
-            
+                   
+
                 registerLink.addEventListener('click', () => {
                     document.getElementById('registerModal').style.display = 'block';
                     document.getElementById('userLoginModal').style.display = 'none'; // Hide login modal when showing registration modal
@@ -431,7 +496,47 @@
         // Initially, only the home section is visible
         homeSection.style.display = 'block';
         newCarsSection.style.display = 'none';
-       
-    </script>
+        //Function to load and display the car list
+        function loadCarList() {
+            const carList = [
+                { id: 1, make: 'Toyota', model: 'Camry', year: 2022, price: 25000 },
+                { id: 2, make: 'Honda', model: 'Accord', year: 2023, price: 27000 },
+                { id: 3, make: 'Ford', model: 'Fusion', year: 2022, price: 23000 }
+                // Replace with actual data or fetch from backend
+            ];
+
+            const carListContainer = document.getElementById('carList');
+            carListContainer.innerHTML = ''; // Clear previous content
+
+            carList.forEach(car => {
+                const carItem = document.createElement('div');
+                carItem.classList.add('car-item');
+                carItem.innerHTML = `
+                    <h3>${car.make} ${car.model}</h3>
+                    <p>Year: ${car.year}, Price: $${car.price}</p>
+                    <button onclick="editCar(${car.id})">Edit</button>
+                    <button onclick="deleteCar(${car.id})">Delete</button>
+                `;
+                carListContainer.appendChild(carItem);
+            });
+        }
+
+        // Function to edit a car
+        function editCar(carId) {
+            // Implement edit car logic here (optional for now)
+            console.log('Editing car with ID:', carId);
+            // You can load the edit form or perform other actions
+        }
+
+        // Function to delete a car
+        function deleteCar(carId) {
+            // Implement delete car logic here (optional for now)
+            console.log('Deleting car with ID:', carId);
+            // You can perform AJAX requests or other actions
+        }
+
+        // Your existing code for handling modals, navigation, etc.
+     </script>
+
 </body>
 </html>
